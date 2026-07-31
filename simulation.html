@@ -163,6 +163,61 @@ if(s==="light"||s==="dark")document.documentElement.setAttribute("data-theme",s)
     </div>
   </div>
 
+  <h2>남은 9일 — 요일별 · 만기 잔여일별 과거 통계</h2>
+  <div class="card scroll">
+    <table>
+      <thead><tr>
+        <th>남은 날</th><th>요일</th><th class="num">요일 평균갭</th><th class="num">요일 100%+</th>
+        <th>만기까지</th><th class="num">잔여일 평균갭</th><th class="num">잔여일 100%+</th><th class="num">잔여일 최대</th>
+      </tr></thead>
+      <tbody id="remain-body"></tbody>
+    </table>
+    <div class="legend">
+      <div class="i">표본: 요일별 239~246일 · 잔여일별 62~71일 (2016~2026)</div>
+      <div class="i"><span class="sw" style="background:var(--accent)"></span>두 지표 모두 상위 = 주목</div>
+    </div>
+  </div>
+
+  <h2>기준 통계 — 요일별 / 만기 잔여일별</h2>
+  <div class="card scroll" style="display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;">
+    <div>
+      <table>
+        <thead><tr><th>요일</th><th class="num">평균</th><th class="num">중앙</th><th class="num">음수날</th><th class="num">100%+</th></tr></thead>
+        <tbody>
+          <tr><td><b>월</b></td><td class="num hi">43.6%</td><td class="num">8.9%</td><td class="num">30%</td><td class="num hi">12%</td></tr>
+          <tr><td>화</td><td class="num">25.2%</td><td class="num">7.5%</td><td class="num">28%</td><td class="num">7%</td></tr>
+          <tr><td><b>수</b></td><td class="num hi">41.5%</td><td class="num hi">15.4%</td><td class="num">19%</td><td class="num">10%</td></tr>
+          <tr><td>목</td><td class="num">34.5%</td><td class="num">10.5%</td><td class="num">27%</td><td class="num">9%</td></tr>
+          <tr><td>금</td><td class="num">27.2%</td><td class="num">9.2%</td><td class="num">26%</td><td class="num">8%</td></tr>
+        </tbody>
+      </table>
+      <div class="note" style="margin-top:.6rem;font-size:.76rem;">
+        월요일 평균이 높은 건 2024-08-05 엔캐리 폭락(1,979%) 한 건 영향이 크다.
+        중앙값으로 보면 <b>수요일</b>이 가장 꾸준하고 음수날도 가장 적다.
+      </div>
+    </div>
+    <div>
+      <table>
+        <thead><tr><th>만기까지</th><th class="num">평균</th><th class="num">중앙</th><th class="num">음수날</th><th class="num">100%+</th></tr></thead>
+        <tbody>
+          <tr><td>D-8</td><td class="num">39.1%</td><td class="num">13.3%</td><td class="num">27%</td><td class="num">13%</td></tr>
+          <tr><td>D-7</td><td class="num">32.1%</td><td class="num">14.2%</td><td class="num">27%</td><td class="num">9%</td></tr>
+          <tr><td>D-6</td><td class="num">51.0%</td><td class="num">15.5%</td><td class="num">18%</td><td class="num">9%</td></tr>
+          <tr><td>D-5</td><td class="num">33.1%</td><td class="num">19.4%</td><td class="num">15%</td><td class="num">6%</td></tr>
+          <tr><td>D-4</td><td class="num">36.4%</td><td class="num">14.6%</td><td class="num">20%</td><td class="num">14%</td></tr>
+          <tr><td><b>D-3</b></td><td class="num hi">68.9%</td><td class="num">19.3%</td><td class="num">23%</td><td class="num hi">20%</td></tr>
+          <tr><td>D-2</td><td class="num">51.5%</td><td class="num hi">24.6%</td><td class="num">21%</td><td class="num">18%</td></tr>
+          <tr><td><b>D-1</b></td><td class="num hi">74.6%</td><td class="num">13.0%</td><td class="num">24%</td><td class="num">18%</td></tr>
+          <tr><td><b>D-0</b></td><td class="num hi">72.8%</td><td class="num hi">23.4%</td><td class="num">25%</td><td class="num hi">25%</td></tr>
+        </tbody>
+      </table>
+      <div class="note" style="margin-top:.6rem;font-size:.76rem;">
+        만기가 가까울수록 갭이 커진다. 특히 <b>D-3 · D-1 · D-0</b>에서 평균과 대박률이 함께 뛴다.
+        만기일(D-0)은 100%+ 갭이 <b>4번 중 1번</b> 꼴.
+      </div>
+    </div>
+  </div>
+
   <h2>시나리오 3안 — 1,368%가 어떻게 빠질까</h2>
   <div class="card" id="scenarios"></div>
 
@@ -196,6 +251,14 @@ var DAYS = [
   {d:"8/12", w:"수", ev:"미국 CPI"},
   {d:"8/13", w:"목", ev:"옵션만기"}
 ];
+// 요일별 통계 (2016~2026, 요일당 239~246일): [평균갭%, 100%+비율%]
+var BY_WEEKDAY = { "월":[43.6,12], "화":[25.2,7], "수":[41.5,10], "목":[34.5,9], "금":[27.2,8] };
+// 만기 잔여일별 통계 (잔여일당 62~71일): [평균갭%, 100%+비율%, 최대갭%]
+var BY_LEFT = {
+  8:[39.1,13,260], 7:[32.1,9,453], 6:[51.0,9,650], 5:[33.1,6,192], 4:[36.4,14,248],
+  3:[68.9,20,594], 2:[51.5,18,624], 1:[74.6,18,1979], 0:[72.8,25,580]
+};
+
 var SCEN = [
   { key:"A", name:"분산 소진형", color:"var(--sA)", ratio:120,
     base:"2025-10-29형 (823% → 126%, 11일에 걸쳐 중간 갭 반복)",
@@ -268,6 +331,31 @@ html += '<div class="legend">'
   + "</div>";
 
 document.getElementById("scenarios").innerHTML = html;
+
+// 남은 9일에 요일·잔여일 통계를 매핑 (마지막 날 = D-0 = 만기)
+(function(){
+  var tb = document.getElementById("remain-body");
+  if(!tb) return;
+  var out = "";
+  DAYS.forEach(function(d, i){
+    var left = DAYS.length - 1 - i;         // 8/13이 D-0
+    var w = BY_WEEKDAY[d.w] || [0,0];
+    var L = BY_LEFT[left] || [0,0,0];
+    // 요일·잔여일 두 지표가 모두 강한 날만 표시 (요일 평균 34%+ 이고 잔여일 대박률 18%+)
+    var hot = (w[0] >= 34 && L[1] >= 18);
+    out += "<tr" + (hot ? ' style="background:var(--accent-soft)"' : "") + ">"
+      + "<td><b>" + d.d + "</b>" + (hot ? " ⭐" : "") + "</td>"
+      + "<td>" + d.w + "</td>"
+      + '<td class="num">' + w[0].toFixed(1) + "%</td>"
+      + '<td class="num">' + w[1] + "%</td>"
+      + "<td>D-" + left + (left === 0 ? " (만기)" : "") + "</td>"
+      + '<td class="num">' + L[0].toFixed(1) + "%</td>"
+      + '<td class="num' + (L[1] >= 18 ? " hi" : "") + '">' + L[1] + "%</td>"
+      + '<td class="num">' + L[2].toLocaleString("ko-KR") + "%</td>"
+      + "</tr>";
+  });
+  tb.innerHTML = out;
+})();
 
 (function(){
   var b = document.getElementById("theme-btn");
